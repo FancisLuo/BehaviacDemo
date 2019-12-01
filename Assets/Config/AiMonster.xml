@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--EXPORTED BY TOOL, DON'T MODIFY IT!-->
+<!--Source File: AiMonster.xml-->
+<behavior name="AiMonster" agenttype="Example::NonPlayerCharacterAgent" version="5">
+  <node class="DecoratorLoop" id="0">
+    <property Count="const int -1" />
+    <property DecorateWhenChildEnds="true" />
+    <property DoneWithinFrame="false" />
+    <node class="Parallel" id="1">
+      <property ChildFinishPolicy="CHILDFINISH_LOOP" />
+      <property ExitPolicy="EXIT_ABORT_RUNNINGSIBLINGS" />
+      <property FailurePolicy="FAIL_ON_ALL" />
+      <property SuccessPolicy="SUCCEED_ON_ONE" />
+      <node class="Action" id="2">
+        <property Method="Self.Example::NonPlayerCharacterAgent::CheckFindTarget()" />
+        <property ResultOption="BT_INVALID" />
+      </node>
+      <node class="Action" id="3">
+        <property Method="Self.Example::NonPlayerCharacterAgent::MoveToNextPoint()" />
+        <property ResultOption="BT_INVALID" />
+      </node>
+    </node>
+  </node>
+</behavior>
