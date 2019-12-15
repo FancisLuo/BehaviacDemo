@@ -25,6 +25,7 @@ namespace Example
 ///<<< END WRITING YOUR CODE
 	{
         private NonPlayerCharacterBase npc;
+        private GameObject targetObj;
 
         public NonPlayerCharacterAgent()
         {
@@ -37,16 +38,44 @@ namespace Example
 
         public EBTStatus CheckFindTarget()
 		{
-			return behaviac.EBTStatus.BT_INVALID;
+            if(npc.CheckTargetAround(true, out targetObj))
+            {
+                return EBTStatus.BT_SUCCESS;
+            }
+
+			return EBTStatus.BT_FAILURE;
 		}
 
 		public EBTStatus MoveToNextPoint()
 		{
-			return behaviac.EBTStatus.BT_INVALID;
+            bool reached = npc.ArrivedAtTarget();
+            if(reached)
+            {
+                npc.MoveToNext();
+
+                return behaviac.EBTStatus.BT_SUCCESS;
+            }
+            else
+            {
+                return EBTStatus.BT_RUNNING;
+            }
 		}
 
         public EBTStatus MoveToTarget()
         {
+            if(null != targetObj)
+            {
+                if(!npc.CheckArrivedTargetPosition())
+                {
+                    npc.MoveToPosition(targetObj.transform.position);
+                    return EBTStatus.BT_SUCCESS;
+                }
+                else
+                {
+                    return EBTStatus.BT_RUNNING;
+                }
+            }
+
             return EBTStatus.BT_INVALID;
         }
 

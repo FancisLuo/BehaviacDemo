@@ -10,8 +10,7 @@ namespace Example
         public override void InitCharacter()
         {
             base.InitCharacter();
-
-            
         }
+
     }
 }

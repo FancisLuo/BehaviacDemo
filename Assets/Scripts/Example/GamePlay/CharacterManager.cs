@@ -10,15 +10,19 @@ namespace Example
         private GameObject npcTemplate;
         private int npcCount;
         private List<Vector3> npcsInitPosition = new List<Vector3>();
+        private List<List<Vector3>> npcPatrolRoute = new List<List<Vector3>>();
 
         private Transform characterParent;
 
-        private Dictionary<long, CharacterBase> characters = new Dictionary<long, CharacterBase>();
+        private Dictionary<long, NonPlayerCharacterBase> characters = new Dictionary<long, NonPlayerCharacterBase>();
+
+        private bool canNPCMove;
 
         public void InitCharacters()
         {
             characters.Clear();
             npcsInitPosition.Clear();
+            npcPatrolRoute.Clear();
 
             InitConfig();
             CreateCharacterManagerObj();
@@ -45,6 +49,15 @@ namespace Example
 
             npcCount = initConfig.EnemyCount;
             npcsInitPosition.AddRange(initConfig.InitPosition);
+
+            foreach(var route in initConfig.PatrolPaths)
+            {
+                var paths = new List<Vector3>();
+                paths.AddRange(route.Route);
+                npcPatrolRoute.Add(paths);
+            }
+
+            canNPCMove = false;
         }
 
         private void CreateCharacters()
@@ -54,6 +67,7 @@ namespace Example
                 var obj = GameObjectFactory.Instance.CreateObject(characterParent, npcsInitPosition[i]);
                 var character = AddCharacterToObject<NonPlayerCharacter>(obj);
                 character.InitCharacter();
+                character.AddPatrolRoute(npcPatrolRoute[i]);
                 characters.Add(character.GetCharacterID(), character);
             }
         }
@@ -81,14 +95,37 @@ namespace Example
             }
         }
 
+        private void Update()
+        {
+            if(canNPCMove)
+            {
+                foreach(var npc in characters)
+                {
+                    npc.Value.StartMove();
+                }
+            }
+        }
+
         private void OnDestroy()
         {
             characters.Clear();
         }
 
+        private void OnGUI()
+        {
+            if(GUILayout.Button("Start NPC"))
+            {
+                canNPCMove = !canNPCMove;
+            }
+        }
+
+        #region Helper Methods
+
         private TCharacter AddCharacterToObject<TCharacter>(GameObject obj) where TCharacter: CharacterBase
         {
             return obj.AddComponent<TCharacter>();
         }
+
+        #endregion
     }
 }
