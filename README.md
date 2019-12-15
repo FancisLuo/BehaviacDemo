@@ -1,10 +1,8 @@
 # BehaviacDemo
 Learn to use behaviac
-
-1. Import the behavaic source code from Tencent repository;
-2. Import Unity Standard Assets for player model;
-3. Add PlayerManager and CharacterManager;
-4. Initialize player and character in Battle scene.
-
-
-------- Just for Demo, not finished yet.
+ - Use behaviac from Tencent to make NPC AI
+ - The AI just include the route patrol
+   1. Read route patrol configuration from config file;
+   2. Parse the route per character;
+   3. Random pick up a point from the route path;
+   4. Move to the picked-up position.
